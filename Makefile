@@ -300,7 +300,7 @@ tools/firecracker-builder-stamp: tools/docker/Dockerfile.firecracker-builder
 	touch $@
 
 $(FIRECRACKER_BIN) $(JAILER_BIN): $(FIRECRACKER_DIR)/Cargo.toml tools/firecracker-builder-stamp
-	docker run --rm -it --user $(UID) \
+	docker run --rm --user $(UID) \
 		--volume $(CURDIR)/$(FIRECRACKER_DIR):/src \
 		--volume $(CARGO_CACHE_VOLUME_NAME):/usr/local/cargo/registry \
 		-e HOME=/tmp \
@@ -311,7 +311,7 @@ $(FIRECRACKER_BIN) $(JAILER_BIN): $(FIRECRACKER_DIR)/Cargo.toml tools/firecracke
 .PHONY: firecracker-clean
 firecracker-clean:
 	rm -f $(FIRECRACKER_BIN) $(JAILER_BIN)
-	- docker run --rm -it --user $(UID) \
+	- docker run --rm --user $(UID) \
 		--volume $(CURDIR)/$(FIRECRACKER_DIR):/src \
 		-e HOME=/tmp \
 		--workdir /src \
