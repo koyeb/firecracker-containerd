@@ -11,7 +11,7 @@ require (
 	github.com/containerd/go-runc v0.0.0-20190226155025-7d11b49dc076
 	github.com/containerd/ttrpc v0.0.0-20190613183316-1fb3814edf44
 	github.com/containerd/typeurl v0.0.0-20181015155603-461401dc8f19
-	github.com/containernetworking/cni v0.7.2-0.20190807151350-8c6c47d1c7fc
+	github.com/containernetworking/cni v0.8.0
 	github.com/containernetworking/plugins v0.8.6
 	github.com/coreos/go-systemd v0.0.0-20181031085051-9002847aa142 // indirect
 	github.com/docker/distribution v2.7.1+incompatible // indirect
