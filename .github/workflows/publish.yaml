@@ -17,25 +17,29 @@ jobs:
         with:
           go-version: "1.14"
       - run: |
+          OUT_DIR=.out/firecracker-containerd/
+          mkdir -p ${OUT_DIR}
           make all
           make firecracker
           make image
 
-          cd bin/
-          BIN_DIR=firecracker-containerd/
+          cp _submodules/firecracker/build/cargo_target/x86_64-unknown-linux-musl/release/firecracker ${OUT_DIR}
+          cp _submodules/firecracker/build/cargo_target/x86_64-unknown-linux-musl/release/jailer ${OUT_DIR}
 
-          mkdir -p ${BIN_DIR}
-          cp ../_submodules/firecracker/build/cargo_target/x86_64-unknown-linux-musl/release/firecracker ${BIN_DIR}
-          cp ../_submodules/firecracker/build/cargo_target/x86_64-unknown-linux-musl/release/jailer ${BIN_DIR}
+          mkdir -p ${OUT_DIR}/image
+          cp tools/image-builder/rootfs.img ${OUT_DIR}/image/rootfs.img
 
-          mkdir -p ${BIN_DIR}/image
-          cp ../tools/image-builder/rootfs.img ${BIN_DIR}/image/rootfs.img
+          cp runtime/containerd-shim-aws-firecracker ${OUT_DIR}
+          cp firecracker-control/cmd/containerd/firecracker-containerd ${OUT_DIR}
+          cp firecracker-control/cmd/containerd/firecracker-ctr ${OUT_DIR}
 
-          cp ../runtime/containerd-shim-aws-firecracker ${BIN_DIR}
-          cp ../firecracker-control/cmd/containerd/firecracker-containerd ${BIN_DIR}
-          cp ../firecracker-control/cmd/containerd/firecracker-ctr ${BIN_DIR}
+          mkdir -p ${OUT_DIR}/cnis
+          for i in bridge firewall host-local ptp tc-redirect-tap; do
+            cp bin/${i} ${OUT_DIR}/cnis
+          done
 
-          tar -czvf firecracker-containerd.tar.gz ${BIN_DIR}
+          cd .out/
+          tar -czvf firecracker-containerd.tar.gz firecracker-containerd
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -54,5 +58,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
           asset_name: firecracker-containerd.tar.gz
-          asset_path: bin/firecracker-containerd.tar.gz
+          asset_path: .out/firecracker-containerd.tar.gz
           asset_content_type: application/octet-stream
