@@ -55,6 +55,17 @@ if [ -n "$overlay_root" ] &&
     exit 1
 fi
 
+# configure ipv6 from command line
+if [ -n "$ipv6" ] ; then
+	re='\[\(.*\)\]::\[\(.*\)\]:\[\(.*\)\]::\(.*\):.*'
+	addr=$(echo $ipv6 | sed -n "s/$re/\1/p")
+	gw=$(echo $ipv6 | sed -n "s/$re/\2/p")
+	if=$(echo $ipv6 | sed -n "s/$re/\4/p")
+	echo "Configure ipv6 $addr"
+	ip -6 addr add $addr dev $if
+	ip -6 route add default via $gw
+fi
+
 do_overlay
 
 # invoke the actual system init program and procede with the boot
