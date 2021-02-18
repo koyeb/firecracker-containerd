@@ -55,7 +55,7 @@ ifneq ($(UID),0)
 endif
 	debootstrap \
 		--variant=minbase \
-		--include=udev,systemd,systemd-sysv,procps,libseccomp2,haveged \
+		--include=udev,systemd,systemd-sysv,procps,libseccomp2,haveged,iproute2 \
 		buster \
 		"$(WORKDIR)" $(DEBMIRROR)
 	rm -rf "$(WORKDIR)/var/cache/apt/archives" \
