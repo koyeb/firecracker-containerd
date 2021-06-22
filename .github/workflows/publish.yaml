@@ -21,10 +21,12 @@ jobs:
           mkdir -p ${OUT_DIR}
           make all
           make firecracker
+          make runc
           make image
 
           cp _submodules/firecracker/build/cargo_target/x86_64-unknown-linux-musl/release/firecracker ${OUT_DIR}
           cp _submodules/firecracker/build/cargo_target/x86_64-unknown-linux-musl/release/jailer ${OUT_DIR}
+          cp _submodules/runc/runc ${OUT_DIR}
 
           mkdir -p ${OUT_DIR}/image
           cp tools/image-builder/rootfs.img ${OUT_DIR}/image/rootfs.img
